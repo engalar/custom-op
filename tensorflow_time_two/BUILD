@@ -86,3 +86,11 @@ py_library(
     ],
     srcs_version = "PY2AND3",
 )
+py_binary(
+    name = "foo",
+    srcs = ["python/bin/foo.py"],
+    data = [],  # a cc_binary which we invoke at run time
+    deps = [
+        ":time_two_ops_py",  # a py_library
+    ],
+)
