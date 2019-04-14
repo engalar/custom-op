@@ -1,3 +1,7 @@
+```sh
+while inotifywait -e modify tensorflow_time_two/cc/kernels/time_two_kernels.cu.cc ;do bazel run //tensorflow_time_two:foo && echo -e "\a";done
+```
+
 # TensorFlow Custom Op
 
 
