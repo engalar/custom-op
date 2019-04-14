@@ -1,3 +1,7 @@
+```sh
+while inotifywatch -e modify tensorflow_time_two/cc/kernels/time_two_kernels.cu.cc ;do bazel run //tensorflow_time_two:foo && echo -e "\a";done
+```
+
 # TensorFlow Custom Op
 This is a guide for users who want to write custom c++ op for TensorFlow and distribute the op as a pip package. This repository serves as both a working example of the op building and packaging process, as well as a template/starting point for writing your own ops. The way this repository is set up allow you to build your custom ops from TensorFlow's pip package instead of building TensorFlow from scratch. This guarantee that the shared library you build will work with TensorFlow's pip packages.
 
