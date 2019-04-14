@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "time_two.h"
 #include "tensorflow/core/util/cuda_kernel_helper.h"
+#include "tensorflow/core/util/cuda_device_functions.h"
 
 namespace tensorflow {
 namespace functor {
@@ -55,13 +56,12 @@ __global__ void OptFlowCudaKernel(const T* in_1, const T* in_2, T* out)
 // Define the CUDA kernel.
 template <typename T>
 __global__ void TimeTwoCudaKernel(const int size, const T* in, T* out) {
-  printf("gridDim.x   %d  ", gridDim.x);
-  printf("blockIdx.x  %d  ", blockIdx.x);
-  printf("threadIdx.x %d  ", threadIdx.x);
+  printf("--gridDim.y   %d  ", gridDim.y);
+//printf("blockIdx.x  %d  ", blockIdx.x);
+//printf("threadIdx.x %d  ", threadIdx.x);
   printf("****************\n");
-  for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < size;
-       i += blockDim.x * gridDim.x) {
-    out[i] = 2 * ldg(in + i);
+  for (int i : CudaGridRangeX(size)) {
+    out[i] = 2* ldg(in + i);
   }
 }
 
@@ -76,7 +76,7 @@ struct TimeTwoFunctor<GPUDevice, T> {
     int block_count = 2;
     int thread_per_block = 2;
     TimeTwoCudaKernel<T>
-        <<<block_count, thread_per_block, 0, d.stream()>>>(size, in, out);
+        <<<(100,1,1), 3, 0, d.stream()>>>(size, in, out);
   }
 };
 
